@@ -1,0 +1,19 @@
+[Unit]
+Description=P1 stroommeter logger en dashboard
+After=network.target
+
+[Service]
+# Draait onder een eigen, door systemd aangemaakte gebruiker; de data staat
+# in /var/lib/p1meter.
+DynamicUser=yes
+SupplementaryGroups=dialout
+StateDirectory=p1meter
+WorkingDirectory=/var/lib/p1meter
+Environment=PYTHONPATH=/opt/p1meter:/opt/p1meter/vendor
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 -m p1meter -c /etc/p1meter/config.toml run
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

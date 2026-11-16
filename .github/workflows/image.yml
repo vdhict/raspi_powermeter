@@ -1,0 +1,41 @@
+name: SD-kaart-image
+
+# Handmatig starten (Actions > SD-kaart-image > Run workflow) levert de image
+# als artifact bij de run. Een tag v* maakt er ook een release van.
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tests
+        run: |
+          pip install pyserial pytest
+          python -m pytest -q
+      - name: Image bouwen
+        run: |
+          sudo sh image/build.sh "$PWD/build/p1meter-raspios-lite.img"
+          sudo chown "$USER" build/p1meter-raspios-lite.img
+          xz -T0 -6 build/p1meter-raspios-lite.img
+          sha256sum build/p1meter-raspios-lite.img.xz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: p1meter-image
+          path: build/p1meter-raspios-lite.img.xz
+          compression-level: 0
+          retention-days: 30
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" build/p1meter-raspios-lite.img.xz --title "$GITHUB_REF_NAME" --generate-notes

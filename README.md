@@ -22,9 +22,44 @@ Alleen `pyserial` is nodig; de rest is de Python-standaardbibliotheek.
 Een DSMR 5-meter voedt de kabel zelf en stuurt elke seconde een meting; oudere meters
 elke 10 seconden.
 
-## Installatie
+## Installatie met kant-en-klare image
 
-Op de Pi, met de P1-kabel in de meter en in een USB-poort:
+De snelste route: een image van Raspberry Pi OS Lite waarin alles al is geïnstalleerd.
+
+1. Download `p1meter-raspios-lite.img.xz`: op GitHub onder **Actions → SD-kaart-image**
+   bij de laatste geslaagde run (onderaan bij *Artifacts*; pak de zip uit), of onder
+   **Releases** als er een release is.
+2. Schrijf de image met [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
+   naar een SD-kaart of USB-stick: kies bij besturingssysteem **Use custom** en
+   selecteer het `.img.xz`-bestand.
+3. Vul in de Imager de aanpassingen in: hostnaam `p1meter`, een gebruikersnaam en
+   wachtwoord, wifi (niet nodig met een netwerkkabel) en zet SSH aan als je wilt
+   kunnen inloggen. Biedt jouw versie van de Imager dat niet aan voor een eigen image,
+   gebruik dan een netwerkkabel; de logger en het dashboard starten ook zonder dat
+   er een gebruiker is aangemaakt.
+4. Kaart in de Pi, P1-kabel in de meter en in de Pi, stroom erop. Na een paar minuten
+   staat het dashboard op `http://p1meter.local:8080` (of gebruik het IP-adres dat
+   de router aan de Pi geeft).
+
+De Pi heeft internet nodig om de klok gelijk te zetten; zonder juiste tijd kloppen de
+tijdstippen van de metingen niet. Instellingen staan in `/etc/p1meter/config.toml`,
+de data in `/var/lib/p1meter/p1meter.db`, het logboek via `journalctl -u p1meter`.
+Na een wijziging: `sudo systemctl restart p1meter`.
+
+De image is 32-bit en werkt op elk Pi-model. Opstarten vanaf USB-stick kan vanaf de
+Pi 3B+ (bij een Pi 4 of 5 standaard, mits er geen SD-kaart in zit).
+
+Zelf bouwen op een Linux-machine kan ook:
+
+```bash
+sudo sh image/build.sh
+```
+
+## Handmatige installatie
+
+Op een Pi waar al Raspberry Pi OS op staat:
+
+Met de P1-kabel in de meter en in een USB-poort:
 
 ```bash
 git clone https://github.com/vdhict/raspi_powermeter.git
