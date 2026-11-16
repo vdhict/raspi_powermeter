@@ -25,7 +25,7 @@ jobs:
       - name: Image bouwen
         run: |
           sudo sh image/build.sh "$PWD/build/p1meter-raspios-lite.img"
-          sudo chown "$USER" build/p1meter-raspios-lite.img
+          sudo chown -R "$USER" build
           xz -T0 -6 build/p1meter-raspios-lite.img
           sha256sum build/p1meter-raspios-lite.img.xz
       - uses: actions/upload-artifact@v4
