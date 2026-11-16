@@ -1,0 +1,14 @@
+# Kopieer naar config.toml en pas aan waar nodig. Alle regels zijn optioneel.
+
+device = "/dev/ttyUSB0"      # de P1-kabel
+serial_mode = "auto"         # auto, dsmr5 (115200 8N1) of dsmr2 (9600 7E1)
+database = "data/p1meter.db"
+bucket_seconds = 10          # meetresolutie in de database
+host = "0.0.0.0"
+port = 8080
+
+# Standaardwaarden voor de batterijberekening in het dashboard
+import_price = 0.25          # EUR per kWh afname
+export_price = 0.05          # EUR per kWh teruglevering (na aftrek terugleverkosten)
+battery_power_w = 800        # laad-/ontlaadvermogen van de batterij
+battery_efficiency = 0.85    # rendement laden + ontladen

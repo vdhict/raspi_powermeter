@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P1 stroommeter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Stroommeter</h1>
+    <p id="status" class="muted">Verbinden…</p>
+  </header>
+
+  <section class="tiles" aria-label="Nu">
+    <div class="tile">
+      <div class="label">Nu</div>
+      <div class="value"><span id="live-net">–</span> <small>W</small></div>
+      <div class="sub" id="live-direction">&nbsp;</div>
+    </div>
+    <div class="tile">
+      <div class="label">Vandaag afgenomen</div>
+      <div class="value"><span id="today-import">–</span> <small>kWh</small></div>
+      <div class="sub">van het net</div>
+    </div>
+    <div class="tile">
+      <div class="label">Vandaag teruggeleverd</div>
+      <div class="value"><span id="today-export">–</span> <small>kWh</small></div>
+      <div class="sub">aan het net</div>
+    </div>
+    <div class="tile">
+      <div class="label">Meterstanden</div>
+      <div class="value small"><span id="meter-import">–</span> <small>kWh</small></div>
+      <div class="sub">terug: <span id="meter-export">–</span> kWh</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Vermogen</h2>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Periode">
+          <button data-range="1" class="active">Dag</button>
+          <button data-range="7">Week</button>
+          <button data-range="30">Maand</button>
+        </div>
+        <button id="prev" aria-label="Vorige periode">‹</button>
+        <span id="period-label"></span>
+        <button id="next" aria-label="Volgende periode">›</button>
+      </div>
+    </div>
+    <p class="muted" id="period-totals">&nbsp;</p>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>Afname van het net</span>
+      <span><i style="background:var(--series-2)"></i>Teruglevering aan het net</span>
+    </div>
+    <div class="chart" id="power-chart"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Per dag</h2>
+      <a class="muted" href="export.csv">Alle metingen als CSV</a>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>Afname (kWh)</span>
+      <span><i style="background:var(--series-2)"></i>Teruglevering (kWh)</span>
+    </div>
+    <div class="chart" id="days-chart"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><h2>Thuisbatterij doorrekenen</h2></div>
+    <p class="muted">
+      Simulatie op alle gemeten data: de batterij laadt met stroom die anders teruggeleverd zou
+      worden en ontlaadt zodra er stroom van het net gevraagd wordt.
+    </p>
+    <form id="battery-form">
+      <label>Vermogen (W)<input name="power" type="number" min="100" max="20000" step="50"></label>
+      <label>Rendement (%)<input name="efficiency" type="number" min="50" max="100" step="1"></label>
+      <label>Prijs afname (€/kWh)<input name="import_price" type="number" min="0" max="2" step="0.01"></label>
+      <label>Vergoeding teruglevering (€/kWh)<input name="export_price" type="number" min="-1" max="2" step="0.01"></label>
+      <button type="submit">Bereken</button>
+    </form>
+    <p id="battery-summary">&nbsp;</p>
+    <h3>Besparing per jaar (€) per batterijgrootte (kWh)</h3>
+    <div class="chart" id="battery-chart"></div>
+    <div class="table-wrap">
+      <table id="battery-table">
+        <thead><tr>
+          <th>Capaciteit</th><th>Afname</th><th>Teruglevering</th><th>Uit batterij</th>
+          <th>Cycli</th><th>Besparing</th><th>Per jaar</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="muted" id="battery-note"></p>
+  </section>
+</main>
+<div id="tooltip" role="status" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

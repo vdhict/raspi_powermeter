@@ -1,0 +1,21 @@
+[project]
+name = "p1meter"
+version = "0.1.0"
+description = "P1 slimme-meter logger en thuisbatterij-analyse voor de Raspberry Pi"
+requires-python = ">=3.11"
+dependencies = ["pyserial>=3.5"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+p1meter = "p1meter.__main__:main"
+
+[tool.setuptools]
+packages = ["p1meter"]
+
+[tool.setuptools.package-data]
+p1meter = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

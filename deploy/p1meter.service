@@ -1,0 +1,13 @@
+[Unit]
+Description=P1 stroommeter logger en dashboard
+After=network.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__DIR__
+ExecStart=__DIR__/.venv/bin/python -m p1meter -c __DIR__/config.toml run
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
